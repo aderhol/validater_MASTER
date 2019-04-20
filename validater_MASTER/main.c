@@ -21,7 +21,7 @@
 
 #include <bLogic.h>
 
-#define PERIOD_MS 1000
+#define PERIOD_MS 100 //period of message sending in ms
 
 #define TASKSTACKSIZE     5120
 
