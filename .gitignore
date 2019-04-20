@@ -1,5 +1,5 @@
-validater_SLAVE/Debug/
-validater_SLAVE/src/
+validater_MASTER/Debug/
+validater_MASTER/src/
 
 *.obj
 *.d
