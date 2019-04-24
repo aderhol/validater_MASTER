@@ -26,6 +26,11 @@ int genNumberOfSatellitesUsed(int64_t time)
     return genUsedGPSSatelliteList(time, PRN) + genUsedGLONASSSatelliteList(time, PRN);
 }
 
+int maxSNR_H(int64_t time)
+{
+    return (int)(triangle(time, 0, 60*13, 9, 77) + 0.5);
+}
+
 int genGPSSatellitesInView(int64_t time, Satellite* satellites)
 {
     int i;
@@ -36,8 +41,8 @@ int genGPSSatellitesInView(int64_t time, Satellite* satellites)
         satellites[i].used = (i < 5);
     }
     
-    int maxSNR = satellites[0].SNR = (int)(triangle(time, 0, 3600*2, 15, 75) + 0.5);
-    double avrSNR = sine(time, 0, 3600*3, 10, 40);
+    int maxSNR = satellites[0].SNR = ((time % 2 == 0) ? maxSNR_H(time) : (maxSNR_H(time)-1));
+    double avrSNR = sine(time, 0, 60*32, 10, 40);
     int sum = (int)(10 * avrSNR - maxSNR + 0.5) - 1*9;
     i = 1;
     while(sum > (maxSNR - 1))
@@ -58,8 +63,8 @@ int genGLONASSSatellitesInView(int64_t time, Satellite* satellites)
         satellites[i].used = (i < 3);
     }
     
-    int maxSNR = satellites[0].SNR = (int)(triangle(time, 90, 3600*2, 20, 75) + 0.5);
-    double avrSNR = sine(time, 90, 3600*3, 15, 35);
+    int maxSNR = satellites[0].SNR = ((time % 2 == 1) ? maxSNR_H(time) : (maxSNR_H(time)-2));
+    double avrSNR = sine(time, 90, 60*32, 15, 35);
     int sum = (int)(10 * avrSNR - maxSNR + 0.5) - 1*9;
     i = 1;
     while(sum > (maxSNR - 1))
@@ -99,7 +104,7 @@ double genAltitude(int64_t time)
 
 double genUndulation(int64_t time)
 {
-    return -16.5;
+    return -16.57;
 }
 
 double genTrack(int64_t time)
@@ -114,7 +119,7 @@ double genSpeed(int64_t time)
 
 Latitude genLatitude(int64_t time)
 {
-    double degree = sine(time, 0, 60 * 5, 5, 40);    
+    double degree = sine(time, 0, 60 * 5, 5, 40);
     Latitude ret;
     ret.degree = (int)degree;
     double a;
