@@ -26,11 +26,6 @@ int genNumberOfSatellitesUsed(int64_t time)
     return genUsedGPSSatelliteList(time, PRN) + genUsedGLONASSSatelliteList(time, PRN);
 }
 
-int maxSNR_H(int64_t time)
-{
-    return (int)(triangle(time, 0, 60*13, 9, 77) + 0.5);
-}
-
 int genGPSSatellitesInView(int64_t time, Satellite* satellites)
 {
     int i;
@@ -41,7 +36,7 @@ int genGPSSatellitesInView(int64_t time, Satellite* satellites)
         satellites[i].used = (i < 5);
     }
     
-    int maxSNR = satellites[0].SNR = ((time % 2 == 0) ? maxSNR_H(time) : (maxSNR_H(time)-1));
+    int maxSNR = satellites[0].SNR = sine(time, 175, 60*7, 5, 66);
     double avrSNR = sine(time, 0, 60*32, 10, 40);
     int sum = (int)(10 * avrSNR - maxSNR + 0.5) - 1*9;
     i = 1;
@@ -63,7 +58,7 @@ int genGLONASSSatellitesInView(int64_t time, Satellite* satellites)
         satellites[i].used = (i < 3);
     }
     
-    int maxSNR = satellites[0].SNR = ((time % 2 == 1) ? maxSNR_H(time) : (maxSNR_H(time)-2));
+    int maxSNR = satellites[0].SNR = sawtooth(time, 0, 60*14, 62, 75);
     double avrSNR = sine(time, 90, 60*32, 15, 35);
     int sum = (int)(10 * avrSNR - maxSNR + 0.5) - 1*9;
     i = 1;
