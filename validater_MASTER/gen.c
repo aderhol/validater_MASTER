@@ -28,46 +28,30 @@ int genNumberOfSatellitesUsed(int64_t time)
 
 int genGPSSatellitesInView(int64_t time, Satellite* satellites)
 {
+    const int numOfSat = 8;
     int i;
-    for(i = 0; i < 10; i++){
+    for(i = 0; i < numOfSat; i++){
         satellites[i].PRN = 10 + i;
         satellites[i].elevation = 50 + i;
         satellites[i].azimuth = 100 + 10 * i + i;
         satellites[i].used = (i < 5);
+        satellites[i].SNR = 50;
     }
-    
-    int maxSNR = satellites[0].SNR = sine(time, 175, 60*7, 5, 66);
-    double avrSNR = sine(time, 0, 60*32, 10, 40);
-    int sum = (int)(10 * avrSNR - maxSNR + 0.5) - 1*9;
-    i = 1;
-    while(sum > (maxSNR - 1))
-        sum -= (satellites[i++].SNR = maxSNR - 1) - 1;
-    satellites[i++].SNR = sum + 1;
-    while(i < 10)
-        satellites[i++].SNR = 1;    
-    return 10;    
+    return numOfSat;    
 }
 
 int genGLONASSSatellitesInView(int64_t time, Satellite* satellites)
 {
+    const int numOfSat = 8;
     int i;
     for(i = 0; i < 10; i++){
         satellites[i].PRN = 70 + i;
         satellites[i].elevation = 30 + i;
         satellites[i].azimuth = 200 + 10 * i + i;
         satellites[i].used = (i < 3);
-    }
-    
-    int maxSNR = satellites[0].SNR = sawtooth(time, 0, 60*14, 62, 75);
-    double avrSNR = sine(time, 90, 60*32, 15, 35);
-    int sum = (int)(10 * avrSNR - maxSNR + 0.5) - 1*9;
-    i = 1;
-    while(sum > (maxSNR - 1))
-        sum -= (satellites[i++].SNR = maxSNR - 1) - 1;
-    satellites[i++].SNR = sum + 1;
-    while(i < 10)
-        satellites[i++].SNR = 1;    
-    return 10;    
+        satellites[i].SNR = 70;
+    }     
+    return numOfSat;    
 }
 
 int genUsedGPSSatelliteList(int64_t time, int* PRN)
