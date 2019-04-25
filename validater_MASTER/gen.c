@@ -28,13 +28,14 @@ int genNumberOfSatellitesUsed(int64_t time)
 
 int genGPSSatellitesInView(int64_t time, Satellite* satellites)
 {
-    const int numOfSat = 8;
+    const int numOfSat = (int)(square(time, 0, 60*5, 33, 3, 12) + 0.5);
+    const int numOfUsed = (int)(square(time, 180, 60*7, 75, 4, 5) + 0.5);
     int i;
     for(i = 0; i < numOfSat; i++){
         satellites[i].PRN = 10 + i;
         satellites[i].elevation = 50 + i;
         satellites[i].azimuth = 100 + 10 * i + i;
-        satellites[i].used = (i < 5);
+        satellites[i].used = (i < numOfUsed);
         satellites[i].SNR = 50;
     }
     return numOfSat;    
@@ -42,13 +43,14 @@ int genGPSSatellitesInView(int64_t time, Satellite* satellites)
 
 int genGLONASSSatellitesInView(int64_t time, Satellite* satellites)
 {
-    const int numOfSat = 8;
+    const int numOfSat = (int)(triangle(time, 0, 60*5, 3, 12) + 0.5);
+    const int numOfUsed = (int)(triangle(time, 180, 60*7, 4, 5) + 0.5);
     int i;
-    for(i = 0; i < 10; i++){
+    for(i = 0; i < numOfSat; i++){
         satellites[i].PRN = 70 + i;
         satellites[i].elevation = 30 + i;
         satellites[i].azimuth = 200 + 10 * i + i;
-        satellites[i].used = (i < 3);
+        satellites[i].used = (i < numOfUsed);
         satellites[i].SNR = 70;
     }     
     return numOfSat;    
