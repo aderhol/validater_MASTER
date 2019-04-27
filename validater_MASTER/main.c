@@ -21,7 +21,7 @@
 
 #include <bLogic.h>
 
-#define PERIOD_MS 100 //period of message sending in ms
+#define PERIOD_MS 150 //period of message sending in ms
 
 #define TASKSTACKSIZE     5120
 
@@ -34,16 +34,26 @@ Char task0Stack[TASKSTACKSIZE];
  *  Task for this function is created statically. See the project's .cfg file.
  */
 Semaphore_Handle sem;
+#include <stdbool.h>
+static bool runIng = false;
 Void echoFxn(UArg arg0, UArg arg1)
 {
     while (1) {
         Semaphore_pend(sem, BIOS_WAIT_FOREVER);
+        runIng = true;
         sendPacket(time);
+        runIng = false;
     }
 }
 
+extern void abort(void);
 Void timerFxn(UArg arg0)
 {
+    if(runIng)
+    {
+        abort();
+    }
+        
     time++;
     Semaphore_post(sem);
     GPIO_toggle(Board_sync);
