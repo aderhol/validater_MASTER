@@ -21,7 +21,7 @@
 
 #include <bLogic.h>
 
-#define PERIOD_MS 100 //period of message sending in ms
+#define PERIOD_MS 1000 //period of message sending in ms
 
 #define TASKSTACKSIZE     5120
 
@@ -47,6 +47,7 @@ Void timerFxn(UArg arg0)
     time++;
     Semaphore_post(sem);
     GPIO_toggle(Board_sync);
+    GPIO_toggle(Board_LED0);
 }
 
 /*
